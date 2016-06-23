@@ -1,2 +1,2 @@
 all:
-	gcc -o /home/box/shell shell.c
+	gcc -o /home/box/shell /home/box/shell.c
