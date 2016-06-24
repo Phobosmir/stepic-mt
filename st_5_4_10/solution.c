@@ -16,11 +16,11 @@ int main (int argc, char **argv) {
 		in_fifo = "/home/box/in.fifo";
 		out_fifo = "/home/box/out.fifo";
 	}
-	if (mkfifo(in_fifo, 666)) {
+	if (mkfifo(in_fifo, 0666)) {
 		perror("in.fifo");
 		exit(EXIT_FAILURE);
 	}
-	if (mkfifo(out_fifo, 666)) {
+	if (mkfifo(out_fifo, 0666)) {
 		perror("in.fifo");
 		exit(EXIT_FAILURE);
 	}
