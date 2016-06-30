@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 	int mem_size = 1024*1024;
-	int shmid = shmget(key, mem_size, S_IRUSR | S_IWUSR | IPC_CREAT | IPC_EXCL);
+	int shmid = shmget(key, mem_size, 0777 | IPC_CREAT | IPC_EXCL);
 	if (shmid == -1) {
 		perror("shmget");
 		exit(EXIT_FAILURE);
