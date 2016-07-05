@@ -4,25 +4,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static pthread_mutex_t *mutex;
-static pthread_spinlock_t *spin_mutex;
-static pthread_rwlock_t *rw_mutex;
+pthread_mutex_t mutex;
+pthread_spinlock_t spin_mutex;
+pthread_rwlock_t rw_mutex;
 
 void* pthread_dummy_job(void *arg) {
 	int job_id = *((int*)arg);
+	printf("job arg: %d\n", job_id);
 	int status;
 	switch (job_id) {
 	case 0:
-		status = pthread_mutex_lock(mutex);
+		status = pthread_mutex_lock(&mutex);
 		break;
 	case 1:
-		status = pthread_spin_lock(spin_mutex);
+		status = pthread_spin_lock(&spin_mutex);
 		break;
 	case 2:
-		status = pthread_rwlock_rdlock(rw_mutex);
+		status = pthread_rwlock_rdlock(&rw_mutex);
 		break;
 	case 3:
-		status = pthread_rwlock_wrlock(rw_mutex);
+		status = pthread_rwlock_wrlock(&rw_mutex);
 		break;
 	default:
 		status = 1;
@@ -34,19 +35,23 @@ void* pthread_dummy_job(void *arg) {
 	return (void*)42;
 }
 void init_and_lock() {
-	if (pthread_mutex_init(mutex, 0) ||
-			pthread_spin_init(spin_mutex, PTHREAD_PROCESS_SHARED) ||
-			pthread_rwlock_init(rw_mutex, 0)){
+	if (pthread_mutex_init(&mutex, 0) ||
+		pthread_spin_init(&spin_mutex, PTHREAD_PROCESS_SHARED) ||
+			pthread_rwlock_init(&rw_mutex, 0)){
 
 		perror("init mutex");
 		exit(EXIT_FAILURE);
 	}
-	if (pthread_mutex_lock(mutex) || pthread_spin_lock(spin_mutex) ||
-		pthread_rwlock_rdlock(rw_mutex) || pthread_rwlock_wrlock(rw_mutex)) {
+	if (pthread_mutex_lock(&mutex) || pthread_spin_lock(&spin_mutex) ||
+		pthread_rwlock_rdlock(&rw_mutex) || 
+		pthread_rwlock_wrlock(&rw_mutex)) {
+
 		
 		perror("lock in main thread");
 		exit(EXIT_FAILURE);
 	} 
+
+	printf("init and lock successful\n");
 }
 
 int main (int argc, char **argv) {
